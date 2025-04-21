@@ -1,0 +1,209 @@
+package semana6;
+import java.util.Scanner;
+import java.util.Arrays;
+
+/**
+ *
+ * @author tazja
+ */
+public class Semana6 {
+
+static Scanner tc=new Scanner(System.in);
+static int Eleccion;
+static int Reserva1;
+static int Asiento1;
+static int i;
+static boolean [] Reserva=new boolean[5];
+static int vip;
+static int PlateaAlta;
+static int PlateaBaja;
+static int Palco;
+static double descuento;
+static double acumulador=0;
+int CapacidadTotal=5;
+int PrecioMasAlto=30000;
+int PrecioMasBajo=13000;
+String TipoEspectador="Todo espectador"; 
+
+
+    /**
+     * @param args the command line arguments
+     */
+public static void main(String[] args) {
+        // TODO code application logic here
+System.out.println("bienvenidos al teatro Moro!!(capacidad del teatro:5 personas)");
+Inicio();
+Menu();
+}
+
+public static void Inicio(){
+do {    
+System.out.println("A continuación se desplegará el menú de Inicio para su solicitud");
+System.out.println("(Primero debe 1.reserva, luego 2.compra y a posterior 3.modifica o 4.imprime boleta)");
+System.out.println("Elija una opción:");
+System.out.println("1.Reservar entradas");
+System.out.println("2.Comprar entradas");
+System.out.println("3.Modificar reserva o compra");
+System.out.println("4.Imprimir boleta");
+System.out.println("5.Salir");
+
+try {Eleccion=tc.nextInt();}
+catch (Exception e){
+    System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+    tc.nextLine();}
+}
+while (Eleccion<1 || Eleccion>4);
+}
+
+
+public static void Menu(){
+do {
+    switch (Eleccion){
+    case (1):
+        ReservaEntradas();
+        break;
+    case (2):
+        CompraEntradas();
+        break;
+    case (3):
+        ModificaVenta();
+        break;
+    case (4):
+        ImprimirBoleta();
+        break;
+        }}
+while (Eleccion!=5);
+    System.out.println("Muchas gracias por su visita!!!");
+}
+
+public static void ReservaEntradas(){
+System.out.println("A continuación se presentan los asientos Libres(L) y Reservados(R)de la fila");
+for (i=0;i<Reserva.length;i++){ 
+    if (Reserva[i]==false){
+        System.out.print("[L]");
+    }else{
+        System.out.print("[R]");}}
+    
+System.out.println("");
+System.out.println("Cuantas entradas quiere reservar?(1-5)");//aqui se ingresó un punto de depuración
+Reserva1=tc.nextInt();//aqui se ingresó un punto de depuración
+if(Reserva1<1 || Reserva1>5){//aqui se ingresó un punto de depuración
+System.out.println("Cuantas entradas quiere reservar?(1-5)");//aqui se ingresó un punto de depuración
+Reserva1=tc.nextInt(); }//aqui se ingresó un punto de depuración
+
+for (int m=0;m<Reserva1;m++){
+System.out.println("Que asiento quiere reservar?(1-5)");//aqui se ingresó un punto de depuración
+Asiento1=tc.nextInt();//aqui se ingresó un punto de depuración
+Reserva[Asiento1-1]=true;//aqui se ingresó un punto de depuración
+}
+System.out.println("Los asientos reservados son:");
+for (i=0;i<Reserva.length;i++){ 
+    if (Reserva[i]==false){
+        System.out.print("[L]");
+    }else{
+        System.out.print("[R]");}}
+System.out.println("");
+System.out.println("A continuación debe ingresar al menú de inicio y seleccionar comprar");
+System.out.println("");
+Inicio();}
+         
+public static void CompraEntradas(){
+System.out.println("Tiene reservado los siguientes asientos(R):");
+for (i=0;i<Reserva.length;i++){ 
+    if (Reserva[i]==false){
+        System.out.print("[L]");
+    }else{
+        System.out.print("[R]");}}
+System.out.println("");
+
+for (i=0;i<Reserva1;i++){
+System.out.println("¿que tipo de entrada quiere comprar?");
+System.out.println("1.VIP");
+System.out.println("2.PlateaAlta");
+System.out.println("3.PlateaBaja");
+System.out.println("4.Palco");
+int num1=tc.nextInt();
+   
+    switch (num1){
+        case 1:
+        vip=30000;
+        break;
+        case 2:
+        PlateaAlta=18000;
+        break;
+        case 3:
+        PlateaBaja=15000;
+        break;
+        case 4:
+        Palco=13000;
+        break;
+    }
+    System.out.println("¿Que edad tiene?");
+    int num2=tc.nextInt();
+    
+    if (num2<=18){
+        descuento=0.1;
+    }else if (num2>=60){
+        descuento=0.15;
+    }else{
+        descuento=0;
+    }
+    
+double PrecioFinal=(vip+PlateaAlta+PlateaBaja+Palco)*(1-descuento);
+acumulador=acumulador+PrecioFinal;
+}
+System.out.println("Para comprar debe pagar la suma de: "+acumulador);
+System.out.println("A continuación en el menú de inicio podrá modificar las reservas o imprimir la boleta");
+System.out.println("");
+Inicio();
+}
+
+public static void ModificaVenta(){
+System.out.println("A continuación se presentan los asientos Reservados(R)de la fila");
+for (i=0;i<Reserva.length;i++){ 
+    if (Reserva[i]==false){
+        System.out.print("[L]");
+    }else{
+        System.out.print("[R]");}}
+
+System.out.println("");
+System.out.println("Que asiento quiere modificar  de los reservados?");
+Asiento1=tc.nextInt();
+if (Reserva[Asiento1-1]==true){
+Reserva[Asiento1-1]=false;}
+
+System.out.println("Que asiento quiere reservar?(1-5)");
+Asiento1=tc.nextInt();
+Reserva[Asiento1-1]=true;
+
+System.out.println("Las nuevas ubicaciones son:");
+for (i=0;i<Reserva.length;i++){ 
+    if (Reserva[i]==false){
+        System.out.print("[L]");
+    }else{
+        System.out.print("[R]");}}
+System.out.println("");
+System.out.println("Debe ingresar en el menú de inicio a la opción imprimir boleta");
+System.out.println("(en caso de querer modificar el precio de la entrada debe ingresar a la opción 2)");
+System.out.println("");
+Inicio();
+}
+public static void ImprimirBoleta(){
+System.out.println("A continuación el detalle de la compra de entradas: ");
+System.out.println("Ubicación del o los asientos: ");
+for (i=0;i<Reserva.length;i++){ //aqui se ingresó un punto de depuración
+    if (Reserva[i]==false){//aqui se ingresó un punto de depuración
+        System.out.print("[L]");//aqui se ingresó un punto de depuración
+    }else{//aqui se ingresó un punto de depuración
+        System.out.print("[R]");}}//aqui se ingresó un punto de depuración
+System.out.println("");
+System.out.println("cantidad de entradas: "+Reserva1);//aqui se ingresó un punto de depuración
+if (acumulador==0){
+    Inicio();}
+    else {
+    System.out.println("Costo total: "+acumulador);}
+//aqui se ingresó un punto de depuración
+System.out.println("Muchas gracias por su compra!!");
+System.exit(0);
+}  
+}
