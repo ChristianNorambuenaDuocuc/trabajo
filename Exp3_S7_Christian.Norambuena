@@ -1,0 +1,158 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package semana7;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+class entradas{
+    String tipo;
+    int precioentrada;
+
+public entradas(String tipo, int precioentrada){
+this.tipo=tipo;
+this.precioentrada=precioentrada;
+}
+}
+class venta{
+    String tipo;
+    double precioentrada;
+    double descuentoap;
+
+public venta(String tipo, double precioentrada,double descuentoap){
+this.tipo=tipo;
+this.precioentrada=precioentrada;
+this.descuentoap=descuentoap;
+}
+}
+
+/**
+ *
+ * @author tazja
+ */
+public class Semana7 {
+    static int menu=0;
+    static double descuento=0;
+    static double acumulador=0;
+    static int cantidadentrada=0;
+    static int asiento;
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+    Scanner tc=new Scanner (System.in);
+    ArrayList<entradas> entradas=new ArrayList<>();
+    ArrayList<venta> venta=new ArrayList<>();
+    System.out.println("Bienvenidos al teatro Moro!!!");
+    inicio(tc);
+    menuseleccion(entradas,tc,venta);
+     }
+        
+    public static void inicio(Scanner tc){    
+    do{
+        
+        System.out.println("-------Menu-------");
+        System.out.println("1.Venta de entradas");
+        System.out.println("2.Visualizar resumen de ventas");
+        System.out.println("3.Generar boleta");
+        System.out.println("4.Calcular ingresos totales");
+        System.out.println("5.Salir del programa");
+        System.out.println("------------------");
+        menu=tc.nextInt();
+        
+    }
+    while (menu<1 || menu>5);
+        
+    }
+        
+   
+    public static void menuseleccion(ArrayList <entradas>entradas,Scanner tc,ArrayList <venta>venta){
+    do{
+        switch(menu){
+            case (1):
+            ventaentradas(entradas,tc,venta);
+            break;
+            case (2):
+            visualizarresumen(venta,tc);
+            break;
+            case (3):
+            generarboleta(venta,tc);
+            break;
+            case (4):
+            calcularingresototal(tc);
+            break;
+    }}while (menu!=5);    
+            System.out.println("Gracias por su compra!!");         
+        }
+    
+    public static void ventaentradas(ArrayList <entradas>entradas,Scanner tc, ArrayList <venta>venta){
+    entradas.add(new entradas("vip",30000));
+    entradas.add(new entradas("plateaalta",18000));
+    entradas.add(new entradas("plateabaja",15000));
+    entradas.add(new entradas("palco",13000));
+    System.out.println("¿Cuantas entradas quiere comprar?");
+    cantidadentrada=tc.nextInt();
+    for(int i=1;i<=cantidadentrada;i++){
+    do{   
+        System.out.println("-------------------------");
+        System.out.println("elija su tipo de asiento para la entrada Nº"+i);
+        System.out.println("1.vip");
+        System.out.println("2.plateaalta");
+        System.out.println("3.plateabaja");
+        System.out.println("4.palco");
+        System.out.println("-------------------------");
+        asiento=tc.nextInt();}
+        while (asiento<=0 || asiento>=5);
+        System.out.println("-------------------------");
+        System.out.println("El costo de la entradas es:"+entradas.get(asiento-1).precioentrada);
+        System.out.println("-------------------------");
+        System.out.println("¿Que edad tiene?");
+        int edad=tc.nextInt();
+        if(edad<18){
+        descuento=0.9;}
+        else if(edad>60){
+        descuento=0.85;}
+        else{
+        descuento=1;}
+        acumulador=acumulador+entradas.get(asiento-1).precioentrada*descuento;
+        venta.add(new venta(entradas.get(asiento-1).tipo,entradas.get(asiento-1).precioentrada,descuento));}
+    System.out.println("----------------------");
+    System.out.println("Si quiere modificar las entradas ingrese 1, en caso de volver al menu principal ingrese 2");
+    int respuesta=tc.nextInt();
+    if (respuesta==1){
+        venta.clear();
+        acumulador=0;
+        ventaentradas(entradas,tc,venta);}
+        else{
+    inicio(tc);}
+    }
+    public static void visualizarresumen (ArrayList <venta>venta,Scanner tc){
+    for (venta s:venta){
+        System.out.println("Tipo de entrada: "+s.tipo+" Precio de entrada: "+s.precioentrada+" Descuento: "+Math.round((1-s.descuentoap)*100)+"%");}
+    System.out.println("-------------------------");
+    inicio(tc);
+    }
+    public static void generarboleta (ArrayList <venta>venta, Scanner tc){
+    for(int i=0;i<cantidadentrada;i++){
+        System.out.println("-------------------------");
+        System.out.println("-------Teatro Moro-------");
+        System.out.println("-------------------------");
+        System.out.println("Ubicación: "+venta.get(i).tipo);
+        System.out.println("Costo Base: "+venta.get(i).precioentrada);
+        System.out.println("Descuento Aplicado: "+Math.round((1-venta.get(i).descuentoap)*100)+"%");
+        System.out.println("Costo Final: "+ venta.get(i).precioentrada*venta.get(i).descuentoap);
+        System.out.println("-------------------------");
+        System.out.println("Gracias por su visita al teatro Moro");
+        System.out.println("-------------------------");}
+    inicio(tc);
+    }
+    public static void calcularingresototal(Scanner tc){
+    System.out.println("-------------------------");
+    System.out.println("Los ingresos totales de todas las ventas son: "+acumulador);
+    System.out.println("-------------------------");
+    inicio(tc);
+}
+}
