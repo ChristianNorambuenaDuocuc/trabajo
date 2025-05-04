@@ -1,0 +1,350 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package semana8;
+import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+//esta clase se encuentra vinculada al arreglo de precios, con el fin de definir el tipo de entrada y precio.  
+class Entradas{
+String tipo;
+double precioentrada;
+
+public Entradas(String tipo, double precioentrada){
+this.tipo=tipo;
+this.precioentrada=precioentrada;
+}
+}
+//esta clase se encuentra asociada al arreglo de ventas, para poder definir el asiento y el tipo de entrada asociada.
+class Ubicacion{
+int asientolibre;
+String tipolibre;
+
+public Ubicacion(int asientolibre, String tipolibre){
+this.asientolibre=asientolibre;
+this.tipolibre=tipolibre;
+}
+}
+
+/**
+ *
+ * @author tazja
+ */
+public class Semana8 {
+    
+    //variables static
+    static int menu=0;
+    static int cantidadentrada=0;
+    static int asiento=0;
+    static String nombrecliente;
+    static int acum0=0;
+    static int acum1=0;
+    static int acum2=0;
+    static int acum3=0;
+    static double dscto=0;
+    
+    
+    //información de precios y asientos
+    static Entradas [] precios={new Entradas("vip",30000),new Entradas("plateaalta",18000),new Entradas("plateabaja",15000),new Entradas("palco",13000)};
+    static Ubicacion [] ventas={new Ubicacion(1,"vip"),
+                                new Ubicacion(2,"vip"),
+                                new Ubicacion(3,"plateaalta"),
+                                new Ubicacion(4,"plateaalta"),
+                                new Ubicacion(5,"plateaalta"),
+                                new Ubicacion(6,"plateabaja"),
+                                new Ubicacion(7,"plateabaja"),
+                                new Ubicacion(8,"palco"),
+                                new Ubicacion(9,"palco"),
+                                new Ubicacion(10,"palco")};
+    static double[] descuento={0.9,0.85,1};
+    
+    //listas de reserva
+    static List<String> cliente=new LinkedList<>();
+    static List<Integer> IDventa=new LinkedList<>();
+    static List<Integer> IDreserva=new LinkedList<>();
+    static List<Integer> TipoEntrada=new LinkedList<>();
+    static List<Double> clientedescuento=new LinkedList<>();
+    static boolean[] reserva=new boolean[10];
+    static Random random=new Random();
+    
+    /**
+     * @param args the command line arguments
+     */
+    //Método Principal
+    public static void main(String[] args) {
+        // TODO code application logic here
+     Scanner tc=new Scanner (System.in); 
+    System.out.println("Bienvenidos al teatro Moro!!!");
+    inicio(tc);
+    menuseleccion(tc);
+    }
+    //Menú principal
+    public static void inicio(Scanner tc){    
+    do{
+        
+        System.out.println("-------Menu-------");
+        System.out.println("1.Venta de entradas");
+        System.out.println("2.Generar boleta");
+        System.out.println("3.Modificar venta");
+        System.out.println("4.Salir del programa");
+        System.out.println("------------------");
+        menu=tc.nextInt();
+    }
+    while (menu<1 || menu>4);
+    }
+    //Método asociado al menú principal, el cual genera las salidas para las elecciones de la variable menu.
+    public static void menuseleccion(Scanner tc){
+    do{
+        switch(menu){
+            case (1):
+            ventaentradas(tc,reserva);
+            break;
+            case (2):
+            Generarboleta(tc);
+            break;
+            case (3):
+            ModificaVenta(tc);
+            break;
+    }}while (menu!=4);    
+            System.out.println("Gracias por su compra!!");         
+        }
+    
+    /*Método secundario  de venta de entradas, este método posee funciones de mostrar asientos disponibles, entrada de información del usuario
+    evaluación del stock de entradas, selección de tipo de entrada, guardado de información en arrays(IDreserva, IDventa, cliente), realiza el descuento
+    de acuerdo a si es estudiante o tercera edad y muestra los asientos elegidos*/
+    //-------Menu-------
+    //1.Venta de entradas
+    public static void ventaentradas(Scanner tc,boolean[] reserva){    
+    System.out.println("La disponibilidad de asientos del teatro Moro, corresponde a:");
+    for (int i=0;i<reserva.length;i++){ 
+        if (reserva[i]==false){
+            System.out.print("[L]");
+            }else{
+            System.out.print("[R]");}}
+    System.out.println("");
+    System.out.println("¿Cuantas entradas quiere comprar?");
+    cantidadentrada=tc.nextInt();
+    if(cantidadentrada>10){
+    System.out.println("¿Cuantas entradas quiere comprar?");
+    cantidadentrada=tc.nextInt();}
+    
+    for(int i=1;i<=cantidadentrada;i++){
+    
+       acum0=0;
+       acum1=0;
+       acum2=0;
+       acum3=0;
+       /*El for siguiente realiza un prueba de stock de entradas(para poder determinar si se pueden comprar nuevas entradas
+       de un mismo tipo)*/
+       for (int p=0;p<=10;p++){         
+                if(p<2 && reserva[p]==true){
+                acum0++;
+                }
+                else if (2<=p&&p<=4&&reserva[p]==true){
+                acum1++;}
+                else if (5<=p&&p<=6&&reserva[p]==true){
+                acum2++;}
+                else if(7<=p&&p<=9&&reserva[p]==true){
+                acum3++;}}
+       
+        do{   
+        System.out.println("-------------------------");
+        System.out.println("elija su tipo de asiento para la entrada Nº"+(acum0+acum1+acum2+acum3+1));
+        System.out.println("1.vip");
+        System.out.println("2.plateaalta");
+        System.out.println("3.plateabaja");
+        System.out.println("4.palco");
+        System.out.println("-------------------------");
+        asiento=tc.nextInt();
+        /*Este switch, toma la información del usuario en cuanto a la elección del asiento y de acuerdo al asiento 
+        realiza una validación de stock y si existe stock, ingresa los datos de la venta de la entrada a los distintos arrays*/
+        switch (asiento){
+                case (1):
+                if(acum0>1){
+                System.out.println("Las entradas vip se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=0;s<=1;s++){
+                if(reserva[s]==false){
+                reserva[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                IDventa.add(random.nextInt(100) -1);
+                System.out.println("-------------------------");
+                System.out.println("Cual es el nombre del cliente para la entrada Nº"+(acum0+acum1+acum2+acum3+1));
+                System.out.println("-------------------------");
+                tc.nextLine();
+                nombrecliente=tc.nextLine();
+                cliente.add(nombrecliente);
+                break;}}
+                System.out.println("¿Que edad tiene?");
+                int edad=tc.nextInt();
+                if(edad<18){
+                dscto=descuento[0];}
+                else if(edad>60){
+                dscto=descuento[1];}
+                else{
+                dscto=descuento[2];}
+                clientedescuento.add(dscto); 
+                break;
+                case (2):
+                if(acum1>=3){
+                System.out.println("Las entradas platea alta se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=2;s<=4;s++){
+                if(reserva[s]==false){
+                reserva[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                IDventa.add(random.nextInt(100) -1);
+                System.out.println("-------------------------");
+                System.out.println("Cual es el nombre del cliente para la entrada Nº"+(acum0+acum1+acum2+acum3+1));
+                System.out.println("-------------------------");
+                tc.nextLine();
+                nombrecliente=tc.nextLine();
+                cliente.add(nombrecliente);
+                break;}}
+                System.out.println("¿Que edad tiene?");
+                edad=tc.nextInt();
+                if(edad<18){
+                dscto=descuento[0];}
+                else if(edad>60){
+                dscto=descuento[1];}
+                else{
+                dscto=descuento[2];}
+                clientedescuento.add(dscto); 
+                break;
+                case (3):
+                if(acum2>=2){
+                System.out.println("Las entradas platea baja se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=5;s<=6;s++){
+                if(reserva[s]==false){
+                reserva[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                IDventa.add(random.nextInt(100) -1);
+                System.out.println("-------------------------");
+                System.out.println("Cual es el nombre del cliente para la entrada Nº"+(acum0+acum1+acum2+acum3+1));
+                System.out.println("-------------------------");
+                tc.nextLine();
+                nombrecliente=tc.nextLine();
+                cliente.add(nombrecliente);
+                break;}}
+                System.out.println("¿Que edad tiene?");
+                edad=tc.nextInt();
+                if(edad<18){
+                dscto=descuento[0];}
+                else if(edad>60){
+                dscto=descuento[1];}
+                else{
+                dscto=descuento[2];}
+                clientedescuento.add(dscto); 
+                break;
+                case (4):
+                if(acum3>=3){
+                System.out.println("Las entradas palco se encuentran agotadas");
+                inicio(tc);
+                return;
+                } 
+                for(int s=7;s<=9;s++){
+                if(reserva[s]==false){
+                reserva[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                IDventa.add(random.nextInt(100) -1);
+                System.out.println("-------------------------");
+                System.out.println("Cual es el nombre del cliente para la entrada Nº"+(acum0+acum1+acum2+acum3+1));
+                System.out.println("-------------------------");
+                tc.nextLine();
+                nombrecliente=tc.nextLine();
+                cliente.add(nombrecliente);
+                break;}}
+                System.out.println("¿Que edad tiene?");
+                edad=tc.nextInt();
+                if(edad<18){
+                dscto=descuento[0];}
+                else if(edad>60){
+                dscto=descuento[1];}
+                else{
+                dscto=descuento[2];}
+                clientedescuento.add(dscto); 
+                break;}   
+                }
+        while (asiento<=0 || asiento>=5);
+        }
+        System.out.println("----------------------------");
+        System.out.println("Los asientos comprados corresponden a las siguientes ubicaciones:");
+        for (int i=0;i<reserva.length;i++){ 
+        if (reserva[i]==false){
+            System.out.print("[L]");
+            }else{
+            System.out.print("[R]");}}
+        System.out.println("");
+        System.out.println("----------------------------");
+        System.out.println("");
+        inicio(tc);}
+    
+    /*Este método presenta la información de cliente, número de asiento, ubicación, costo, descuento y costo final.*/
+    //-------Menu-------
+    //2.Generar boleta
+    public static void Generarboleta(Scanner tc){
+    for(int i=1;i<=cliente.size();i++){
+        System.out.println("-------------------------");
+        System.out.println("-------Teatro Moro-------");
+        System.out.println("-------------------------");
+        System.out.println("Nombre Cliente: "+cliente.get(i-1));
+        System.out.println("ID reserva(Número asiento): "+IDreserva.get(i-1));
+        System.out.println("Ubicación: "+precios[TipoEntrada.get(i-1)].tipo);
+        System.out.println("Costo Base: "+precios[TipoEntrada.get(i-1)].precioentrada);
+        System.out.println("Descuento Aplicado: "+Math.round((1-clientedescuento.get(i-1))*100)+"%");
+        System.out.println("Costo Final: "+precios[TipoEntrada.get(i-1)].precioentrada*clientedescuento.get(i-1));
+        System.out.println("-------------------------");
+        System.out.println("Gracias por su visita al teatro Moro");
+        System.out.println("-------------------------");}
+        inicio(tc);
+    }
+    /*Este método elimina la información de los arrays asociados a una entrada, con el fin de que el usuario pueda volver a ingresar los datos de la entrada en 
+    caso de errores al ingreso*/
+    //-------Menu-------
+    //3.Modificar venta
+    public static void ModificaVenta(Scanner tc){
+    System.out.println("A continuación se presentan los asientos Reservados(R)de la fila");
+    for (int i=0;i<reserva.length;i++){ 
+    if (reserva[i]==false){
+        System.out.print("[L]");
+        }else{
+        System.out.print("[R]");}}
+        System.out.println("");
+
+    System.out.println("");
+    System.out.println("Que asiento quiere modificar  de los reservados?");
+    int Asiento1=tc.nextInt();
+    if (reserva[Asiento1-1]==true){
+        reserva[Asiento1-1]=false;
+        cliente.remove(Asiento1-1);
+        IDventa.remove(Asiento1-1);
+        IDreserva.remove(Asiento1-1);
+        TipoEntrada.remove(Asiento1-1);
+        clientedescuento.remove(Asiento1-1);}
+
+    System.out.println("Las ubicaciones libres corresponden a(L):");
+    for (int i=0;i<reserva.length;i++){ 
+        if (reserva[i]==false){
+            System.out.print("[L]");
+            }else{
+            System.out.print("[R]");}}
+    System.out.println("");
+    System.out.println("Para ingresar los datos correctos, ingresar a la opción 1.Venta de entradas");
+    System.out.println("");
+    inicio(tc);
+}
+}
