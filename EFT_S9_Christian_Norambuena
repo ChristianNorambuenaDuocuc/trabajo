@@ -1,0 +1,497 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package semana.pkg9;
+
+import java.util.Scanner;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ArrayList;
+
+/*la clase Entradas, se encuentra asociada a la ArrayList precios*/
+class Entradas{
+String tipo;
+double precioentrada;
+
+public Entradas(String tipo, double precioentrada){
+this.tipo=tipo;
+this.precioentrada=precioentrada;
+}}
+
+/**
+ *
+ * @author tazja
+ */
+public class Semana9 {
+
+    /*A continuación las variables estáticas*/
+    static int menu=0;
+    static int cantidadentrada=0;
+    static int asiento;
+    static int acum0;
+    static int acum1;
+    static int acum2;
+    static int acum3;
+    static int acum4;
+    static int edad=0;
+    static double dscto=0;
+    static boolean mujer;
+    static boolean estudiante;
+    static int Asiento1;
+    static int numerofila;
+    
+    /*Arraylist(valores de los precios y de los descuentos)*/
+    static List <Entradas> precios=new ArrayList<>();
+    static List <Double> descuentos=new ArrayList<>();
+    
+    /*Array(corresponde a los asientos del teatro)*/
+    static boolean[] asientosvendidos1=new boolean[5];
+    static boolean[] asientosvendidos2=new boolean[5];
+    static boolean[] asientosvendidos3=new boolean[5];
+    static boolean[] asientosvendidos4=new boolean[5];
+    static boolean[] asientosvendidos5=new boolean[5];
+    
+    /*LinkedList(corresponden a la información asociada a las ventas de los boletos)*/
+    static List <Integer> TipoEntrada=new LinkedList<>();
+    static List <Integer> IDreserva=new LinkedList<>();
+    static List <Double> clientedescuento=new LinkedList<>();
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+    //ingresos de datos a precios y descuentos
+    precios.add(new Entradas("vip",30000));
+    precios.add(new Entradas("plateaalta",18000));
+    precios.add(new Entradas("plateabaja",15000));
+    precios.add(new Entradas("palco",13000));
+    precios.add(new Entradas("galeria",10000));
+    descuentos.add(0.9);
+    descuentos.add(0.8);
+    descuentos.add(0.85);
+    descuentos.add(0.75);
+    
+    
+    Scanner tc=new Scanner (System.in); 
+    System.out.println("Bienvenidos al teatro Moro!!!");
+    inicio(tc);
+    menuseleccion(tc);
+    }
+    //Menú principal
+    public static void inicio(Scanner tc){    
+    do{
+        
+        System.out.println("-------Menu-------");
+        System.out.println("1.Venta de entradas");
+        System.out.println("2.Generar boleta");
+        System.out.println("3.Modificar venta");
+        System.out.println("4.Salir del programa");
+        System.out.println("------------------");
+        try {menu=tc.nextInt();}
+        catch (Exception e){
+        System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+        tc.nextLine();}
+        
+    }
+    while (menu<1 || menu>4);
+    }
+    //Método asociado al menú principal, el cual genera las salidas para las elecciones de la variable menu.
+    public static void menuseleccion(Scanner tc){
+    do{
+        switch(menu){
+            case (1):
+            ventaentradas(tc,asientosvendidos1,asientosvendidos2,asientosvendidos3,asientosvendidos4,asientosvendidos5);
+            break;
+            case (2):
+            Generarboleta(tc);
+            break;
+            case (3):
+            ModificaVenta(tc);
+            break;
+    }}while (menu!=4);    
+            System.out.println("Gracias por su compra!!");         
+        }
+    /*Método secundario  de venta de entradas, este método posee funciones de mostrar asientos disponibles, entrada de información del usuario
+    evaluación del stock de entradas, selección de tipo de entrada, guardado de información, realiza el descuento
+    de acuerdo a si es tercera edad,niño,mujer y estudiante, muestra los asientos elegidos*/
+     public static void ventaentradas(Scanner tc,boolean[] asientosvendidos1,boolean[] asientosvendidos2,boolean[] asientosvendidos3,
+     boolean[] asientosvendidos4,boolean[] asientosvendidos5 ){    
+    System.out.println("La disponibilidad de asientos del teatro Moro, corresponde a:");
+    for (int i=0;i<asientosvendidos1.length;i++){ 
+        if (asientosvendidos1[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+        }
+    System.out.println();
+    for (int i=0;i<asientosvendidos2.length;i++){
+        if (asientosvendidos2[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos3.length;i++){
+        if (asientosvendidos3[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos4.length;i++){
+        if (asientosvendidos4[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos5.length;i++){
+        if (asientosvendidos5[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+    }
+    System.out.println("");
+    System.out.println("¿Cuantas entradas quiere comprar?");
+    /*1er debug(prueba depuración),primer run, al ingresar las entradas (3), el programa se cae. Al revisar donde se cae, que era en el for
+    (int p=1;p<=5;p++), el error se debía a que la variable p comenzaba de 1 a 5, siendo que el arreglo comienza en 0 y termina 
+    en 4, asunto arreglado*/
+    try {cantidadentrada=tc.nextInt();}
+    catch (Exception e){
+    System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+    tc.nextLine();}
+    
+    
+
+    for(int i=1;i<=cantidadentrada;i++){
+    
+    acum0=0;
+    acum1=0;
+    acum2=0;
+    acum3=0;
+    acum4=0;
+    /*3er debug, la numeración de las entradas en el menu de elección de entradas se queda en el Nº1, tambien generaba un error en la validación de los stocks de entradas,
+    dentro del for estaban los if con 1<=p&&p<=5, siendo que parten en cero y terminan en 4, modificando esto se arregló el error */
+    for (int p=0;p<=4;p++){         
+                if(0<=p&&p<=4 && asientosvendidos1[p]==true){
+                acum0++;}
+                else if (0<=p&&p<=4&&asientosvendidos2[p]==true){
+                acum1++;}
+                else if (0<=p&&p<=4&&asientosvendidos3[p]==true){
+                acum2++;}
+                else if(0<=p&&p<=4&&asientosvendidos4[p]==true){
+                acum3++;}
+                else if(0<=p&&p<=4&&asientosvendidos5[p]==true){
+                acum4++;}}
+    
+    do{   
+        System.out.println("-------------------------");
+        System.out.println("elija su tipo de asiento para la entrada Nº"+(acum0+acum1+acum2+acum3+acum4+1));
+        System.out.println("1.vip");
+        System.out.println("2.plateaalta");
+        System.out.println("3.plateabaja");
+        System.out.println("4.palco");
+        System.out.println("5.galeria");
+        System.out.println("-------------------------");
+        try {asiento=tc.nextInt();}
+        catch (Exception e){
+        System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+        tc.nextLine();}
+        
+        
+        switch (asiento){
+                case (1):
+                if(acum0>4){
+                System.out.println("Las entradas vip se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=0;s<=4;s++){
+                if(asientosvendidos1[s]==false){
+                asientosvendidos1[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                break;}}
+                break;
+                case (2):
+                if(acum1>4){
+                System.out.println("Las entradas platea alta se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=0;s<=4;s++){
+                if(asientosvendidos2[s]==false){
+                asientosvendidos2[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                break;}}
+                break;
+                case (3):
+                if(acum2>4){
+                System.out.println("Las entradas platea baja se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=0;s<=4;s++){
+                if(asientosvendidos3[s]==false){
+                asientosvendidos3[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                break;}}
+                break;
+                case (4):
+                if(acum3>4){
+                System.out.println("Las entradas palco se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=0;s<=4;s++){
+                if(asientosvendidos4[s]==false){
+                asientosvendidos4[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                break;}}
+                break;
+                case (5):
+                if(acum4>4){
+                System.out.println("Las entradas galeria se encuentran agotadas");
+                inicio(tc);
+                return;
+                }
+                for(int s=0;s<=4;s++){
+                if(asientosvendidos5[s]==false){
+                asientosvendidos5[s]=true;
+                TipoEntrada.add(asiento-1);
+                IDreserva.add(i);
+                break;}}
+                break;}   
+                }
+        while (asiento<=0 || asiento>=6);
+    
+        do {dscto=0;
+            System.out.println("¿Que edad tiene?");
+            try {edad=tc.nextInt();}
+            catch (Exception e){
+            System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+            tc.nextLine();}
+            }
+        while (edad>100);
+        
+        if(edad>60){
+            dscto=descuentos.get(3);}
+        else if (edad<12){
+            dscto=descuentos.get(0);}
+        
+        if(dscto==0){
+            System.out.println("¿Es mujer(true/false)?");
+            try {mujer=tc.nextBoolean();}
+            catch (Exception e){
+            System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+            tc.nextLine();}
+            }
+        if(mujer==true){
+            dscto=descuentos.get(1);}
+        /*segundo debug, error al determinar el tipo de condición para el descuento(ingresa edad 1 año y pregunta si es mujer?),habían 2 errores, el primero
+        que no hbaía un reset de la variable dscto, por tanto por cada for el valor del dscto no cambiaba, entonces java no podía determinar una nueva condición
+        ya que venía con un valor anterior, para solucionarlo puse un reset al inicio del if, dejando dscto=0 para que vuelva a ser leído, el segundo error era
+        que había un if anidado, con la pregunta de ¿es mujer? y además si mujer es true, dar un descto, entonces el sistema solo tomaba el primer if y no
+        el anidado, entonces la solución era separar los if, para que pudiese reconocer primero el valor de true de mujer y después ver que el true corresponda a un descto.*/
+        if(dscto==0){
+            System.out.println("¿Es estudiante(true/false)?");
+            try {estudiante=tc.nextBoolean();}
+            catch (Exception e){
+            System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+            tc.nextLine();}
+            }
+        if(estudiante==true){
+            dscto=descuentos.get(2);}
+        
+        clientedescuento.add(dscto); 
+        }
+    
+    System.out.println("----------------------------");
+    System.out.println("Los asientos comprados corresponden a las siguientes ubicaciones:"); 
+    for (int i=0;i<asientosvendidos1.length;i++){ 
+        if (asientosvendidos1[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+        }
+    System.out.println();
+    for (int i=0;i<asientosvendidos2.length;i++){
+        if (asientosvendidos2[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos3.length;i++){
+        if (asientosvendidos3[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos4.length;i++){
+        if (asientosvendidos4[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos5.length;i++){
+        if (asientosvendidos5[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+    } 
+        
+    System.out.println("");
+    System.out.println("---------------");
+    System.out.println("");
+    inicio(tc);}
+/*Este método presenta la información de número de asiento, ubicación, costo, descuento y costo final.*/
+public static void Generarboleta(Scanner tc){
+for(int i=1;i<=IDreserva.size();i++){
+    System.out.println("-------------------------");
+    System.out.println("-------Teatro Moro-------");
+    System.out.println("-------------------------");
+    System.out.println("ID reserva(Número asiento): "+IDreserva.get(i-1));
+    System.out.println("Ubicación: "+precios.get(TipoEntrada.get(i-1)).tipo);
+    System.out.println("Costo Base: "+precios.get(TipoEntrada.get(i-1)).precioentrada);
+    System.out.println("Descuento Aplicado: "+Math.round((1-clientedescuento.get(i-1))*100)+"%");
+    System.out.println("Costo Final: "+precios.get(TipoEntrada.get(i-1)).precioentrada*clientedescuento.get(i-1));
+    System.out.println("-------------------------");
+    System.out.println("Gracias por su visita al teatro Moro");
+    System.out.println("-------------------------");}
+    inicio(tc);}
+/*Este método elimina la información  asociadas a la venta de una entrada, con el fin de que el usuario pueda volver a ingresar los datos de la entrada en 
+    caso de errores al ingreso*/
+public static void ModificaVenta(Scanner tc){
+System.out.println("A continuación se presentan los asientos Vendidos(V)de la fila correspondiente");
+    for (int i=0;i<asientosvendidos1.length;i++){ 
+        if (asientosvendidos1[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+        }
+    System.out.println();
+    for (int i=0;i<asientosvendidos2.length;i++){
+        if (asientosvendidos2[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos3.length;i++){
+        if (asientosvendidos3[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos4.length;i++){
+        if (asientosvendidos4[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos5.length;i++){
+        if (asientosvendidos5[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+    } 
+
+    System.out.println("");
+    System.out.println("Que asiento quiere modificar  de los vendidos?");
+    try {Asiento1=tc.nextInt();}
+    catch (Exception e){
+    System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+    tc.nextLine();}
+    
+    System.out.println("Ingresar el tipo de entrada que compró");
+    System.out.println("1.vip");
+    System.out.println("2.plateaalta");
+    System.out.println("3.plateabaja");
+    System.out.println("4.palco");
+    System.out.println("5.galeria");
+    try {numerofila=tc.nextInt();}
+    catch (Exception e){
+    System.out.println("ERROR ESO NO ES UN NUMERO VALIDO");
+    tc.nextLine();}
+    
+    
+    switch (numerofila){
+        case (1):
+        if (asientosvendidos1[Asiento1-1]==true){
+        asientosvendidos1[Asiento1-1]=false;
+        IDreserva.remove(Asiento1-1);
+        TipoEntrada.remove(Asiento1-1);
+        clientedescuento.remove(Asiento1-1);}
+        break;
+        case (2):
+        if (asientosvendidos2[Asiento1-1]==true){
+        asientosvendidos2[Asiento1-1]=false;
+        IDreserva.remove(Asiento1-1);
+        TipoEntrada.remove(Asiento1-1);
+        clientedescuento.remove(Asiento1-1);}
+        break;
+        case (3):
+        if (asientosvendidos3[Asiento1-1]==true){
+        asientosvendidos3[Asiento1-1]=false;
+        IDreserva.remove(Asiento1-1);
+        TipoEntrada.remove(Asiento1-1);
+        clientedescuento.remove(Asiento1-1);}
+        break;
+        case (4):
+        if (asientosvendidos4[Asiento1-1]==true){
+        asientosvendidos4[Asiento1-1]=false;
+        IDreserva.remove(Asiento1-1);
+        TipoEntrada.remove(Asiento1-1);
+        clientedescuento.remove(Asiento1-1);}
+        break;
+        case (5):
+        if (asientosvendidos5[Asiento1-1]==true){
+        asientosvendidos5[Asiento1-1]=false;
+        IDreserva.remove(Asiento1-1);
+        TipoEntrada.remove(Asiento1-1);
+        clientedescuento.remove(Asiento1-1);}
+        break;
+        }
+    
+    System.out.println("Las ubicaciones libres corresponden a(D):");
+    for (int i=0;i<asientosvendidos1.length;i++){ 
+        if (asientosvendidos1[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+        }
+    System.out.println();
+    for (int i=0;i<asientosvendidos2.length;i++){
+        if (asientosvendidos2[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos3.length;i++){
+        if (asientosvendidos3[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos4.length;i++){
+        if (asientosvendidos4[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}}
+    System.out.println();
+    for (int i=0;i<asientosvendidos5.length;i++){
+        if (asientosvendidos5[i]==false){
+            System.out.print("[D]");
+            }else{
+            System.out.print("[V]");}
+    } 
+    System.out.println("");
+    System.out.println("Para ingresar los datos correctos, ingresar a la opción 1.Venta de entradas");
+    System.out.println("");
+    inicio(tc);}
+     
+}
+    
+    
+
+    
