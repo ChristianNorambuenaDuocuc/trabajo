@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS factura (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    paciente VARCHAR(100),
+    total DOUBLE
+);
