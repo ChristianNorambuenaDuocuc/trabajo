@@ -1,18 +1,38 @@
-nombre:  SonarQube 
-en: 
-  push: 
-    ramas: 
-      -  principal 
-  pull_request: 
-    tipos: [ abierto , sincronizar , reabierto ]
- trabajos: 
-  build: 
-    nombre:  Construir  y  analizar 
-    se ejecuta en:  ubuntu-latest 
-    pasos: 
-      -  usa:  actions/checkout@v4 
-        con: 
-          fetch-depth:  0   # Los clones superficiales deben deshabilitarse para una mejor relevancia del análisis 
-      -  nombre:  Configurar  JDK  17 usa: actions/setup-java@v4 con: java-version: 17 distribución: 'zulu' # Hay opciones de  distribución alternativas disponibles. - nombre: Caché de paquetes SonarQube usa: actions/cache@v4 con: ruta: ~/.sonar/cache clave: ${{ runner.os }}-sonar restaurar-claves: ${{ runner.os }}-sonar - nombre: Caché de paquetes Maven usa: actions/cache@v4 con: ruta: ~/.m2 clave: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }} restaurar-claves: ${{ runner.os }}-m2 - nombre: Construir y analizar env: SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} ejecutar: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ChristianNorambuenaDuocuc_trabajo
-         
-        
+name: SonarQube
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+
+      - name: Build with Maven
+        run: mvn -B clean verify
+
+      - name: SonarCloud Scan
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=ChristianNorambuenaDuocuc_trabajo \
+          -Dsonar.organization=christiannorambuenaduocuc \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
