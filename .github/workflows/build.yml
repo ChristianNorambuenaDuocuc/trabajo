@@ -1,0 +1,18 @@
+nombre:  SonarQube 
+en: 
+  push: 
+    ramas: 
+      -  principal 
+  pull_request: 
+    tipos: [ abierto , sincronizar , reabierto ]
+ trabajos: 
+  build: 
+    nombre:  Construir  y  analizar 
+    se ejecuta en:  ubuntu-latest 
+    pasos: 
+      -  usa:  actions/checkout@v4 
+        con: 
+          fetch-depth:  0   # Los clones superficiales deben deshabilitarse para una mejor relevancia del análisis 
+      -  nombre:  Configurar  JDK  17 usa: actions/setup-java@v4 con: java-version: 17 distribución: 'zulu' # Hay opciones de  distribución alternativas disponibles. - nombre: Caché de paquetes SonarQube usa: actions/cache@v4 con: ruta: ~/.sonar/cache clave: ${{ runner.os }}-sonar restaurar-claves: ${{ runner.os }}-sonar - nombre: Caché de paquetes Maven usa: actions/cache@v4 con: ruta: ~/.m2 clave: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }} restaurar-claves: ${{ runner.os }}-m2 - nombre: Construir y analizar env: SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} ejecutar: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ChristianNorambuenaDuocuc_trabajo
+         
+        
