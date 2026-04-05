@@ -31,8 +31,4 @@ jobs:
         run: cd demo && mvn -B clean verify
 
       - name: SonarCloud Scan
-        run: cd demo && mvn sonar:sonar \
-          -Dsonar.projectKey=ChristianNorambuenaDuocuc_trabajo \
-          -Dsonar.organization=christiannorambuenaduocuc \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        run: cd demo && mvn sonar:sonar -Dsonar.projectKey=ChristianNorambuenaDuocuc_trabajo -Dsonar.organization=christiannorambuenaduocuc -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
